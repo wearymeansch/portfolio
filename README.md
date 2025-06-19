@@ -15,7 +15,6 @@ My portfolio
 
 <img src="https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white"/>
 <img src="https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white"/>
-<img src="https://img.shields.io/badge/Linux-20232A?style=flat&logo=linux&logoColor=white"/>
 <img src="https://img.shields.io/badge/VSCode-007ACC?style=flat&logo=visualstudiocode&logoColor=white"/>
 
 ---
@@ -33,8 +32,8 @@ My portfolio
 
 ## 📫 Контакты
 
-- Email: [почта@example.com](mailto:почта@example.com)
-- Telegram: [@твойник](https://t.me/твойник)
+- Email: [sdfhaujqip@gmail.com]
+- Telegram: [@lmonsterlaizildl](https://t.me/lmonsterlaizildl)
 
 ---
 
