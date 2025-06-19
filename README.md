@@ -1,5 +1,4 @@
-# portfolio
-My portfolio
+# 📁 Portfolio
 
 <h1 align="center">👋 Привет! Я wearymeansch</h1>
 
@@ -24,15 +23,15 @@ My portfolio
 | Название | Описание | Ссылка |
 |----------|----------|--------|
 | 💼 Portfolio | Мой сайт-портфолио, размещённый на GitHub Pages | [Открыть](https://wearymeansch.github.io/portfolio/) |
-| 🕵️ Caesar Cipher v1.2 | Программа шифрования/дешифрования текста по методу Цезаря | [Смотреть файл](https://github.com/wearymeansch/portfolio/blob/main/The%20Ceaser%20cipher%201v2.py) |
-| ☠️ Gallows 2 (Виселица) | Текстовая игра "Виселица" на Python | [Смотреть файл](https://github.com/wearymeansch/portfolio/blob/main/gallows%202) |
+| 🕵️ Caesar Cipher v1.2 | Программа шифрования/дешифрования текста по методу Цезаря | [Смотреть файл](https://github.com/wearymeansch/portfolio/blob/main/The%20Ceaser%20cipher1v2.py) |
+| ☠️ Gallows2.py (Виселица) | Текстовая игра "Виселица" на Python | [Смотреть файл](https://github.com/wearymeansch/portfolio/blob/main/gallows2.py) |
 | 🧮 cf104853-100b.py | Скрипт для задач по математике/алгоритмам | [Смотреть файл](https://github.com/wearymeansch/portfolio/blob/main/cf104853-100b.py) |
 
 ---
 
 ## 📫 Контакты
 
-- Email: [sdfhaujqip@gmail.com]
+- Email: [sdfhaujqip@gmail.com](mailto:sdfhaujqip@gmail.com)
 - Telegram: [@lmonsterlaizildl](https://t.me/lmonsterlaizildl)
 
 ---
