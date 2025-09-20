@@ -1,0 +1,272 @@
+import sys
+
+def height(r):
+    if r==None:
+        return 0
+    else:
+        return max(height(r[1]), height(r[2]))+1
+def size(r):
+    if r==None:
+        return 0
+    else:
+        return size(r[1])+size(r[2])+1
+def find(s,zn):
+    while s:
+        if s[0]==zn:
+            break
+        elif s[0]>zn:
+            s=s[1]
+        else:
+            s=s[2]
+    return s
+def findmaxleft(s):
+    if s[1]:
+        s=s[1]
+        while s[2]:
+            s=s[2]
+    else:
+        s=None
+    return s
+def findminright(s):
+    if s[2]:
+        s=s[2]
+        while s[1]:
+            s=s[1]
+    else:
+        s=None
+    return s
+def findreplace(s):
+    c=findmaxleft(s)
+    if c==None:
+        c=findminright(s)
+    return c
+
+def rotateleft(r):#поворот влево. r - это эл-т, который считается старым предком, а новым предком
+#станет его правый ребёнок 
+    if r!= None and r[2] != None:#проверяем, что есть эл-т и его правый ребёнок, иначе оставляем дерево неизменным
+        nr=r[2]#запоминаем ссылку на новый предок
+        nr[3]=r[3]#исправляем родителя нового предка
+        if r[3]:#если родитель есть, то исправляем его ребенка
+            if r[3][1]==r:#если это левый ребенок
+                r[3][1]=nr#исправляем левого ребенка
+            else:
+                r[3][2]=nr#исправляем правого ребенка
+        r[2]=nr[1]#бывший левый ребёнок нового предка станет правым ребёнком старого предка 
+        if nr[1]:#если у нового предка левый ребенок был
+            nr[1][3]=r#исправляем родителя у этого ребенка
+        r[3]=nr#родителем старого предка становится новый предок
+        nr[1]=r#левым ребёнком нового предка станет старый предок
+def rotateright(r):#поворот вправо. r - это эл-т, который считается старым предком, а новым предком
+#станет его левый ребёнок 
+    if r!= None and r[1] != None:#проверяем, что есть эл-т и его левый ребёнок, иначе оставляем дерево неизменным
+        nr=r[1]#запоминаем ссылку на новый предок
+        nr[3]=r[3]#исправляем родителя нового предка
+        if r[3]:#если родитель есть, то исправляем его ребенка
+            if r[3][1]==r:#если это левый ребенок
+                r[3][1]=nr#исправляем левого ребенка
+            else:
+                r[3][2]=nr#исправляем правого ребенка
+        r[1]=nr[2]#бывший правый ребёнок нового предка станет левым ребёнком старого предка 
+        if nr[2]:#если у нового предка правый ребенок был
+            nr[2][3]=r#исправляем родителя у этого ребенка
+        r[3]=nr#родителем старого предка становится новый предок
+        nr[2]=r#правым ребёнком нового предка станет старый предок
+def grandparent(s):
+    if s[3]:
+        return s[3][3]
+    else:
+        return None
+def uncle(s):
+    g = grandparent(s)
+    if g:
+        if s[3]==g[1]:
+            return g[2]
+        else:
+            return g[1]
+    else:
+        return None
+def sibling(s):#эта функция будет вызываться только для не корневых элементов
+    if s == s[3][1]:
+        return s[3][2]
+    else:
+        return s[3][1]
+def make_delete(s,zn):#функция вызывается для удаления в дереве s элемента со значением zn
+    n = find(s,zn)#ищем эл-т со значением zn в дереве s
+    if n:#если такой эл-т есть
+        c=findreplace(n)#находим возможную замену значения в эл-те n
+        if c:#если замена есть
+            n[0]=c[0]#то меняем значение эл-та n на значение эл-та c
+        else:
+            c=n#иначе будет удаляться сам n
+        if c==s:
+            s=None
+        else:
+            delete_one_child(c)#запускаем удаление эл-та c, у которого не больше одного ребенка
+    return s
+def replace_node(n,c):#возможно потребуется написать случай обработки c==None
+    c[3]=n[3]
+    if n[3]:
+        if n==n[3][1]:#если n является левым потомком своего родителя
+            n[3][1]=c
+        else:#если n является правым потомком своего родителя
+            n[3][2]=c
+def delete_one_child(n):#удаление узла, у которого не больше одного ребенка
+    c = n[1] if n[1] else n[2]#находим существующего ребенка или None
+    if c:
+        replace_node(n,c)
+        if n[4]=='b':
+            if c[4]=='r':
+                c[4]=='b'
+            else:
+                delete_case1(c)
+    #del n
+def delete_case1(n):
+    if n[3]:
+        delete_case2(n)
+def delete_case2(n):
+    s = sibling(n)
+    if s[4]=='r':
+        n[3][4]='r'
+        s[4]='b'
+        if n == n[3][1]:
+            rotate_left(n[3])
+        else:
+            rotate_right(n[3])
+    delete_case3(n)
+def delete_case3(n):
+    s=sibling(n)
+    if n[3][4]=='b' and s[4]=='b' and s[1][4]=='b' and s[2][4]=='b':
+        s[4]='r'
+        delete_case1(n[3])
+    else:
+        delete_case4(n)
+def delete_case4(n):
+    s = sibling(s)
+    if n[3][4]=='r' and s[4]=='b' and s[1][4]=='b' and s[2][4]=='b':
+        s[4]='r'
+        n[3][4]='b'
+    else:
+        delete_case5(n)
+def delete_case5(n):
+    s = sibling(n)
+    if s[4]=='b':
+        if n==n[3][1] and s[2][4]=='b' and s[1][4]=='r':
+            s[4]='r'
+            s[1][4]='b'
+            rotate_right(s)
+        elif n==n[3][2] and s[1][4]=='b' and s[2][4]=='r':
+            s[4]='r'
+            s[2][4]='b'
+            rotate_left(s)
+    delete_case6(n)
+def delete_case6(n):
+    s = sibling(n)
+    s[4]=n[3][4]
+    n[3][4]='b'
+    if n==n[3][1]:
+        s[2][4]='b'
+        rotate_left(n[3])
+    else:
+        s[1][4]='b'
+        rotate_right(n[3])
+def make_insert(s,zn):#функция вызывается для вставки в корень s
+    n = [zn, None, None, None,"r"]#создаем новый эл-т красного цвета
+    insert(s, n)#вставляем его в нужное место дерева
+    if s == None:
+        s=n
+    insert_case1(n)#обеспечиваем поддержание всех свойств дерева
+    while s[3]:
+        s=s[3]
+    return s
+def insert(s,n):#функция вызывается для вставки в произвольное место дерева s
+    if s == None:#аналог случая 2 в Википедии
+        s=n#создание нового эл-та, который к чему-нибудь будет привязан
+    elif s[0]>n[0]:
+        if s[1]==None:
+            s[1]=n
+            n[3]=s
+        else:
+            insert(s[1], n)#вставка числа в левую ветку
+    else:
+        if s[2]==None:
+            s[2]=n
+            n[3]=s
+        else:
+            insert(s[2], n)#вставка числа в правую ветку
+#здесь функция insert является рекурсивной, поскольку она вызывает сама себя. У рекурсивных функций
+#обязательно должен быть базовый случай, который вычисляется без обращения функции к самой с:ебе.
+#Здесь таким базовым случаем является строчка 3. Базовый случай всегда должен достигаться за конечное
+#кол-во вызовов функции, иначе может возникнуть бесконечная рекурсия (программа подвиснет).
+#В Питоне для защиты от бесконечной рекурсии сделан контроль количества незавершенных вызовов функции.
+#По умолчанию допускается не более 1000 незавершенных вызовов функции. Кол-во незавершенных вызовов
+#рекурсивной функции ограничивается из-за того, что каждый незавершенный вызов рекурсивной функции
+#требует дополнительной памяти для локальных переменных и ссылки на предыдущий незавершенный
+#вызов функции, в какое место функции нужно возвращаться.
+#В питоне при необходимости можно увеличить максимально допустимое кол-во незавершенных рекурсивных
+#вызовов, используя функцию setcursionlimit из модуля sys. Узнать текущую глубину рекурсии можно
+#функцией getrecursionlimit
+
+def insert_case1(n):
+    if n[3]==None:
+        n[4]='b'
+    else:
+        insert_case2(n)
+def insert_case2(n):
+    if n[3][4]=='b':
+        return
+    else:
+        insert_case3(n)
+def insert_case3(n):
+    u = uncle(n)
+    if u and u[4]=='r':
+        n[3][4]='b'
+        u[4]='b'
+        g = grandparent(n)
+        g[4]='r'
+        insert_case1(g)
+    else:
+        insert_case4(n)
+def insert_case4(n):
+    g = grandparent(n)
+    if n==n[3][2] and n[3]==g[1]:
+        rotateleft(n[3])
+        n = n[1]
+    elif n==n[3][1] and n[3]==g[2]:
+        rotateright(n[3])
+        n = n[2]
+    insert_case5(n)
+def insert_case5(n):
+    g = grandparent(n)
+    n[3][4]='b'
+    g[4]='r'
+    if n == n[3][1] and n[3]==g[1]:
+        rotateright(g)
+    else:
+        rotateleft(g)
+print(sys.getrecursionlimit())
+sys.setrecursionlimit(10000)
+s=None
+ch = list(range(1,11))# [4,2,8,1,3,6,9,5,7,10]
+for ch1 in ch:
+    #ch1=int(input())
+    s=make_insert(s, ch1)
+    print(s)
+    print(height(s), size(s))
+##s=rotateleft(s)
+##print(s)
+##print(height(s), size(s))
+##s[2]=rotateleft(s[2])
+##print(s)
+##print(height(s), size(s))
+##s[2][2]=rotateleft(s[2][2])
+##print(s)
+##print(height(s), size(s))
+##s[2][2][2]=rotateleft(s[2][2][2])
+##print(s)
+##print(height(s), size(s))
+##s=rotateleft(s)
+##print(s)
+##print(height(s), size(s))
+##s[2]=rotateleft(s[2])
+##print(s)
+##print(height(s), size(s))
